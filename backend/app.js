@@ -20,8 +20,8 @@ const swaggerDocument = JSON.parse(
 
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.use("/clients", clientsRoutes);
-app.use("/reservations", reservationsRoutes);
+app.use("/api/clients", clientsRoutes);
+app.use("/api/reservations", reservationsRoutes);
 
 export default app;
 
