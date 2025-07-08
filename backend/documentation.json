@@ -1,14 +1,14 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Simple Inventory API",
-    "description": "This is a simple API",
+    "title": "API de Clientes y Reservas",
+    "description": "API para gestionar clientes y sus reservas de servicios",
     "contact": {
-      "email": "you@your-company.com"
+      "email": "soporte@tuempresa.com"
     },
     "license": {
-      "name": "Apache 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
     },
     "version": "1.0.0"
   },
@@ -16,106 +16,267 @@
     {
       "url": "https://virtserver.swaggerhub.com/ricaldone-a13/prueba20porcent/1.0.0",
       "description": "SwaggerHub API Auto Mocking"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Servidor local de desarrollo"
     }
   ],
   "tags": [
     {
-      "name": "admins",
-      "description": "Secured Admin-only calls"
+      "name": "Clients",
+      "description": "Operaciones relacionadas con clientes"
     },
     {
-      "name": "developers",
-      "description": "Operations available to regular developers"
+      "name": "Reservations",
+      "description": "Operaciones relacionadas con reservas"
     }
   ],
   "paths": {
-    "/inventory": {
+    "/clients": {
       "get": {
         "tags": [
-          "developers"
+          "Clients"
         ],
-        "summary": "searches inventory",
-        "description": "By passing in the appropriate options, you can search for\navailable inventory in the system\n",
-        "operationId": "searchInventory",
-        "parameters": [
-          {
-            "name": "searchString",
-            "in": "query",
-            "description": "pass an optional search string for looking up inventory",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "skip",
-            "in": "query",
-            "description": "number of records to skip for pagination",
-            "required": false,
-            "schema": {
-              "minimum": 0,
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "maximum number of records to return",
-            "required": false,
-            "schema": {
-              "maximum": 50,
-              "minimum": 0,
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
+        "summary": "Obtener todos los clientes",
         "responses": {
           "200": {
-            "description": "search results matching criteria",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/InventoryItem"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "bad input parameter"
+            "description": "Lista de clientes"
           }
         }
       },
       "post": {
         "tags": [
-          "admins"
+          "Clients"
         ],
-        "summary": "adds an inventory item",
-        "description": "Adds an item to the system",
-        "operationId": "addInventory",
+        "summary": "Crear un nuevo cliente",
         "requestBody": {
-          "description": "Inventory item to add",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/InventoryItem"
+                "$ref": "#/components/schemas/Cliente"
               }
             }
-          }
+          },
+          "required": true
         },
         "responses": {
           "201": {
-            "description": "item created"
+            "description": "Cliente creado"
           },
           "400": {
-            "description": "invalid input, object invalid"
+            "description": "Datos inválidos"
           },
           "409": {
-            "description": "an existing item already exists"
+            "description": "Cliente ya registrado"
+          }
+        }
+      }
+    },
+    "/clients/{id}": {
+      "get": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Obtener cliente por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente encontrado"
+          },
+          "404": {
+            "description": "Cliente no encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Actualizar cliente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Cliente"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Cliente actualizado"
+          },
+          "404": {
+            "description": "Cliente no encontrado"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Eliminar cliente",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cliente eliminado"
+          },
+          "404": {
+            "description": "Cliente no encontrado"
+          }
+        }
+      }
+    },
+    "/reservations": {
+      "get": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Obtener todas las reservas",
+        "responses": {
+          "200": {
+            "description": "Lista de reservas"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Crear una nueva reserva",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Reserva"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Reserva creada"
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "404": {
+            "description": "Cliente no encontrado"
+          }
+        }
+      }
+    },
+    "/reservations/{id}": {
+      "get": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Obtener reserva por ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reserva encontrada"
+          },
+          "404": {
+            "description": "Reserva no encontrada"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Actualizar reserva",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Reserva"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Reserva actualizada"
+          },
+          "404": {
+            "description": "Reserva no encontrada"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Reservations"
+        ],
+        "summary": "Eliminar reserva",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reserva eliminada"
+          },
+          "404": {
+            "description": "Reserva no encontrada"
           }
         }
       }
@@ -123,52 +284,66 @@
   },
   "components": {
     "schemas": {
-      "InventoryItem": {
+      "Cliente": {
         "required": [
-          "id",
-          "manufacturer",
+          "email",
           "name",
-          "releaseDate"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid",
-            "example": "d290f1ee-6c54-4b01-90e6-d701748f0851"
-          },
-          "name": {
-            "type": "string",
-            "example": "Widget Adapter"
-          },
-          "releaseDate": {
-            "type": "string",
-            "format": "date-time",
-            "example": "2016-08-29T09:12:33.001Z"
-          },
-          "manufacturer": {
-            "$ref": "#/components/schemas/Manufacturer"
-          }
-        }
-      },
-      "Manufacturer": {
-        "required": [
-          "name"
+          "password"
         ],
         "type": "object",
         "properties": {
           "name": {
             "type": "string",
-            "example": "ACME Corporation"
+            "example": "Juan Pérez"
           },
-          "homePage": {
+          "email": {
             "type": "string",
-            "format": "url",
-            "example": "https://www.acme-corp.com"
+            "format": "email",
+            "example": "juan@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "secret123"
           },
           "phone": {
             "type": "string",
-            "example": "408-867-5309"
+            "example": "1234-5678"
+          },
+          "age": {
+            "type": "integer",
+            "example": 30
+          }
+        }
+      },
+      "Reserva": {
+        "required": [
+          "clientId",
+          "service",
+          "vehicle"
+        ],
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string",
+            "example": "64a1f2b3c4d5e6f7a8b9c0d1"
+          },
+          "vehicle": {
+            "type": "string",
+            "example": "Toyota Corolla"
+          },
+          "service": {
+            "type": "string",
+            "example": "Cambio de aceite"
+          },
+          "status": {
+            "type": "string",
+            "example": "pendiente",
+            "enum": [
+              "pendiente",
+              "en proceso",
+              "completado",
+              "cancelado"
+            ]
           }
         }
       }
